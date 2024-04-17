@@ -34,3 +34,14 @@ shell run.sh
 ### Checkpoint:
 
 The pretrained model could be found in: https://drive.google.com/file/d/13JZFrSf6L-hA_mXdAxyguBhEaX-z5pYD/view?usp=drive_link
+
+### Interface:
+Process to Start the Repository:
+
+Create a new directory for your project and navigate to it in the terminal. Create a virtual environment (optional but recommended):
+
+python -m venv venv
+
+source venv/bin/activate Install the required dependencies:
+
+pip install flask numpy pandas xgboost
