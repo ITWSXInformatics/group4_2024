@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fault Diagnosis and Classification</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#diagnoseForm").submit(function (event) {
+          event.preventDefault();
+          var formData = new FormData(this);
+
+          $.ajax({
+            url: "/diagnose",
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+              var prediction = response.predictions[0];
+              $("#prediction").text("Prediction: " + prediction);
+              $("#fault-description").text(getFaultDescription(prediction));
+              $("#fault-type").text(getFaultType(prediction));
+            },
+            error: function () {
+              alert("Error occurred during diagnosis.");
+            },
+          });
+        });
+      });
+
+      function getFaultDescription(faultId) {
+        var faultDescriptions = {
+          1: "A/C Feed ratio, B Composition constant",
+          2: "B Composition, A/C Ratio constant",
+          3: "D Feed temperature",
+          4: "Reactor cooling water inlet temperature",
+          5: "Condenser cooling water inlet temperature",
+          6: "A Feed loss",
+          7: "C Header pressure loss - reduced availability",
+          8: "A, B, C Feed composition",
+          9: "D Feed temperature",
+          10: "C Feed temperature",
+          11: "Reactor cooling water inlet temperature",
+          12: "Condenser cooling water inlet temperature",
+          13: "Reaction kinetics",
+          14: "Reactor cooling water valve",
+          15: "Condenser cooling water valve",
+          16: "Unknown",
+          17: "Unknown",
+          18: "Unknown",
+          19: "Unknown",
+          20: "Unknown",
+        };
+        return faultDescriptions[faultId] || "Unknown";
+      }
+
+      function getFaultType(faultId) {
+        var faultTypes = {
+          1: "Step",
+          2: "Step",
+          3: "Step",
+          4: "Step",
+          5: "Step",
+          6: "Step",
+          7: "Step",
+          8: "Random variation",
+          9: "Random variation",
+          10: "Random variation",
+          11: "Random variation",
+          12: "Random variation",
+          13: "Slow drift",
+          14: "Sticking",
+          15: "Sticking",
+          16: "Random variation",
+          17: "Random variation",
+          18: "Step",
+          19: "Random variation",
+          20: "Random variation",
+        };
+        return faultTypes[faultId] || "Unknown";
+      }
+    </script>
+  </head>
+  <body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-4">
+        Fault Diagnosis and Classification
+      </h1>
+      <div class="grid grid-cols-2 gap-8">
+        <div>
+          <form id="diagnoseForm" enctype="multipart/form-data" class="mb-8">
+            <div class="mb-4">
+              <label for="file" class="block mb-2 font-bold"
+                ><i class="fas fa-file-csv mr-2"></i>Upload
+                fault7_input.csv:</label
+              >
+              <input
+                type="file"
+                id="file"
+                name="file"
+                accept=".csv"
+                required
+                class="border border-gray-300 rounded-md px-4 py-2 w-full"
+              />
+            </div>
+            <button
+              type="submit"
+              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            >
+              <i class="fas fa-cogs mr-2"></i>Diagnose
+            </button>
+          </form>
+          <div class="bg-white shadow-md rounded-md p-6">
+            <h2 class="text-xl font-bold mb-4">
+              <i class="fas fa-chart-bar mr-2"></i>Diagnosis Results:
+            </h2>
+            <p id="prediction" class="mb-2">
+              <i class="fas fa-robot mr-2"></i>Prediction:
+            </p>
+            <p id="fault-description" class="mb-2">
+              <i class="fas fa-info-circle mr-2"></i>Description:
+            </p>
+            <p id="fault-type" class="mb-2">
+              <i class="fas fa-wrench mr-2"></i>Type:
+            </p>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold mb-4">
+            <i class="fas fa-table mr-2"></i>Fault Description:
+          </h2>
+          <img
+            src="{{ url_for('static', filename='image1.png') }}"
+            alt="Fault Description"
+            class="mb-8"
+          />
+          <h2 class="text-xl font-bold mb-4">
+            <i class="fas fa-sitemap mr-2"></i>Process Flow Diagram:
+          </h2>
+          <img
+            src="{{ url_for('static', filename='image2.png') }}"
+            alt="Process Flow Diagram"
+          />
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
